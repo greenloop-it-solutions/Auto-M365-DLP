@@ -272,7 +272,7 @@ if ($ModeAnswer -eq 'y' -or $Answer -eq 'yes') {
    #######
 
 # We only want to offer to disable built-in policies if we're running in Enable mode, not Test mode.
-if ($Mode = "Enabled") {
+if ($Mode = "Enable") {
    Write-Host
    Write-Host
    $Answer2 = Read-Host "Do you want to Delete all custom DLP rules and Policices, so that only the new [v1.2] Data Loss Prevention Policies and Rules Apply? This is recommended to do only once, unless you have other custom rules you wish to keep. Type Y or N and press Enter to continue"
