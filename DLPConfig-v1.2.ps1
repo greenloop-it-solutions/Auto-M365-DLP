@@ -179,12 +179,12 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 $ModeAnswer = Read-Host "Would you like the script to ENFORCE the DLP Configuration for this tenant (Y / N) - if no, we'll enable TEST WITH NOTIFICATIONS mode only."
 if ($ModeAnswer -eq 'y' -or $Answer -eq 'yes') {
     $Mode = 'Enable'
+    $AlertAddress = Read-Host "Enter the Email address of the person at the client that will receive high-volume DLP violation alerts."
     } else {
         $Mode = 'TestWithNotifications'
+        $AlertAddress = $Cred.UserName
     }
 }
-
-   $AlertAddress = $Cred.UserName
 
    if ($null -eq $AlertAddress) {
       Write-Host
