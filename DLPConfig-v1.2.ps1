@@ -176,6 +176,13 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 $Answer = Read-Host "Would you like the script to begin the DLP Configuration for this tenant? (Y / N)"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
+$ModeAnswer = Read-Host "Would you like the script to ENFORCE the DLP Configuration for this tenant (Y / N) - if no, we'll enable TEST WITH NOTIFICATIONS mode only."
+if ($ModeAnswer -eq 'y' -or $Answer -eq 'yes') {
+    $Mode = 'Enable'
+    } else {
+        $Mode = 'TestWithNotifications'
+    }
+}
 
    $AlertAddress = $Cred.UserName
 
@@ -294,7 +301,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
       'Name'             = "[Stage 1] Data Loss Prevention EXO [v1.2]";
       'Comment'          = "[Stage 1] Data Loss Prevention EXO [v1.2] Imported via PS";
       'Priority'         = 0;
-      'Mode'             = "Enable";
+      'Mode'             = $Mode;
       'ExchangeLocation' = "All"
    }
 
@@ -344,7 +351,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
       'Name'               = "[Stage 1] Data Loss Prevention for SPO + OD [v1.2]";
       'Comment'            = "[Stage 1] Data Loss Prevention for SharePoint and OneDrive [v1.2] Imported via PS";
       'Priority'           = 1;
-      'Mode'               = "Enable";
+      'Mode'               = $Mode;
 
       'SharePointLocation' = "All";
 
@@ -358,7 +365,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
       'Name'               = "[Stage 1] Data Loss Prevention Non-EXO [v1.2]";
       'Comment'            = "[Stage 1] Data Loss Prevention for All Platforms Non-EXO [v1.2] Imported via PS";
       'Priority'           = 2;
-      'Mode'               = "Enable";
+      'Mode'               = $Mode;
 
       'TeamsLocation'      = "All";
 
