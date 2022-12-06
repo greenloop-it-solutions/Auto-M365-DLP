@@ -176,13 +176,13 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 $Answer = Read-Host "Would you like the script to begin the DLP Configuration for this tenant? (Y / N)"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
+    $AlertAddress = Read-Host "Enter the Email address of the person at the client that will receive high-volume DLP violation alerts."
 $ModeAnswer = Read-Host "Would you like the script to ENFORCE the DLP Configuration for this tenant (Y / N) - if no, we'll enable TEST WITH NOTIFICATIONS mode only."
 if ($ModeAnswer -eq 'y' -or $Answer -eq 'yes') {
     $Mode = 'Enable'
-    $AlertAddress = Read-Host "Enter the Email address of the person at the client that will receive high-volume DLP violation alerts."
+
     } else {
         $Mode = 'TestWithNotifications'
-        $AlertAddress = $Cred.UserName
     }
 }
 
@@ -483,7 +483,7 @@ if ($Mode = "Enable") {
    Write-Host
    Write-Host -ForegroundColor green "[v1.2] Data Loss Prevention Policy and Rules for All Non-Exchange Platforms have been created."
 
-} ## End Of Script
+## End Of Script
 
 
 #>
