@@ -4,6 +4,9 @@
 #################################################
 
 
+Updates for v.1.3:
+Added "'GenerateIncidentReport' = $AlertAddress;"  for all Rules
+
 Updates for v1.2:
 - Removed some Sensitive Info Types and policy
     - Added Connect-CMDlet Option
@@ -144,7 +147,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
    $Cred = Get-Credential
 
-   $AlertAddress = $Cred.UserName
+   #$AlertAddress = $Cred.UserName
 
    if ($null -eq $AlertAddress) {
       Write-Host
@@ -275,7 +278,7 @@ if ($ModeAnswer -eq 'y' -or $Answer -eq 'yes') {
 if ($Mode = "Enable") {
    Write-Host
    Write-Host
-   $Answer2 = Read-Host "Do you want to Delete all custom DLP rules and Policices, so that only the new [v1.2] Data Loss Prevention Policies and Rules Apply? This is recommended to do only once, unless you have other custom rules you wish to keep. Type Y or N and press Enter to continue"
+   $Answer2 = Read-Host "Do you want to Delete all custom DLP rules and Policices, so that only the new [v1.3] Data Loss Prevention Policies and Rules Apply? This is recommended to do only once, unless you have other custom rules you wish to keep. Type Y or N and press Enter to continue"
    if ($Answer2 -eq 'y' -or $Answer2 -eq 'yes') {
 
       Get-DlpCompliancePolicy | Remove-DlpCompliancePolicy
@@ -295,11 +298,11 @@ if ($Mode = "Enable") {
 
    Write-Host
    Write-Host
-   Write-Host -ForegroundColor green "Creating [v1.2] Data Loss Prevention Policy and Rules for Exchange Online."
+   Write-Host -ForegroundColor green "Creating [v1.3] Data Loss Prevention Policy and Rules for Exchange Online."
 
    $EXoDLPparam = @{
-      'Name'             = "[Stage 1] Data Loss Prevention EXO [v1.2]";
-      'Comment'          = "[Stage 1] Data Loss Prevention EXO [v1.2] Imported via PS";
+      'Name'             = "[Stage 1] Data Loss Prevention EXO [v1.3]";
+      'Comment'          = "[Stage 1] Data Loss Prevention EXO [v1.3] Imported via PS";
       'Priority'         = 0;
       'Mode'             = $Mode;
       'ExchangeLocation' = "All"
@@ -311,11 +314,11 @@ if ($Mode = "Enable") {
    # All Exchange ; Encrypt-All Automatically and provide policy tip (your message was encrypted...)
 
    $EXoDLruleParam = @{
-      'Name'                                = "[Stage 1] DLP EXO Rule - Encrypt All [v1.2]";
-      'Comment'                             = "[Stage 1] Data Loss Prevention Exchange Online Rule Encrypt All Outgoing [v1.2] Imported via PS";
+      'Name'                                = "[Stage 1] DLP EXO Rule - Encrypt All [v1.3]";
+      'Comment'                             = "[Stage 1] Data Loss Prevention Exchange Online Rule Encrypt All Outgoing [v1.3] Imported via PS";
       'Disabled'                            = $False;
       'Priority'                            = 0;
-      'Policy'                              = "[Stage 1] Data Loss Prevention EXO [v1.2]";
+      'Policy'                              = "[Stage 1] Data Loss Prevention EXO [v1.3]";
       'ContentContainsSensitiveInformation' = $SensitiveInfo;
          
       'AccessScope'                         = "NotInOrganization";
@@ -323,6 +326,8 @@ if ($Mode = "Enable") {
       'EncryptRMSTemplate'                  = "Encrypt"; ## Exchange Only
       #  'DocumentIsPasswordProtected' = $True;
       'ExceptIfDocumentIsPasswordProtected' = $True;
+
+      'GenerateIncidentReport'              = $AlertAddress;
 
       'NotifyUser'                          = "LastModifier";
       'NotifyPolicyTipCustomText'           = "This email contains sensitive information and will be automatically encrypted when sent.";
@@ -336,7 +341,7 @@ if ($Mode = "Enable") {
 
    Write-Host
    Write-Host
-   Write-Host -ForegroundColor green "[v1.2] Data Loss Prevention Policy and Rules for Exchange Online [Encrypt All] has been created."
+   Write-Host -ForegroundColor green "[v1.3] Data Loss Prevention Policy and Rules for Exchange Online [Encrypt All] has been created."
 
 
 
@@ -345,11 +350,11 @@ if ($Mode = "Enable") {
    ##########
 
    Write-Host
-   Write-Host -ForegroundColor green "Creating [v1.2] Data Loss Prevention Policy and Rules for All Non-Exchange Platforms."
+   Write-Host -ForegroundColor green "Creating [v1.3] Data Loss Prevention Policy and Rules for All Non-Exchange Platforms."
 
    $SPO_ODO_DLP_param = @{
-      'Name'               = "[Stage 1] Data Loss Prevention for SPO + OD [v1.2]";
-      'Comment'            = "[Stage 1] Data Loss Prevention for SharePoint and OneDrive [v1.2] Imported via PS";
+      'Name'               = "[Stage 1] Data Loss Prevention for SPO + OD [v1.3]";
+      'Comment'            = "[Stage 1] Data Loss Prevention for SharePoint and OneDrive [v1.3] Imported via PS";
       'Priority'           = 1;
       'Mode'               = $Mode;
 
@@ -362,8 +367,8 @@ if ($Mode = "Enable") {
    New-DlpCompliancePolicy @SPO_ODO_DLP_param
 
    $NonEXoDLPparam = @{
-      'Name'               = "[Stage 1] Data Loss Prevention Non-EXO [v1.2]";
-      'Comment'            = "[Stage 1] Data Loss Prevention for All Platforms Non-EXO [v1.2] Imported via PS";
+      'Name'               = "[Stage 1] Data Loss Prevention Non-EXO [v1.3]";
+      'Comment'            = "[Stage 1] Data Loss Prevention for All Platforms Non-EXO [v1.3] Imported via PS";
       'Priority'           = 2;
       'Mode'               = $Mode;
 
@@ -373,6 +378,7 @@ if ($Mode = "Enable") {
 
       'OneDriveLocation'   = "All";
 
+
    }
 
    New-DlpCompliancePolicy @NonEXoDLPparam
@@ -381,16 +387,18 @@ if ($Mode = "Enable") {
    # SPO + OD ; Any Volume - Block Access to Anonymous Users
 
    $NonEXoDLruleParamAny = @{
-      'Name'                                = "[Stage 1] DLP Non-EXO Rule - Any Volume [v1.2]";
-      'Comment'                             = "[Stage 1] Data Loss Prevention All Platforms for Non-EXO Rule ANY Volume (Block Anonymous) [v1.2] Imported via PS";
+      'Name'                                = "[Stage 1] DLP Non-EXO Rule - Any Volume [v1.3]";
+      'Comment'                             = "[Stage 1] Data Loss Prevention All Platforms for Non-EXO Rule ANY Volume (Block Anonymous) [v1.3] Imported via PS";
       'Disabled'                            = $False;
       'Priority'                            = 0;
-      'Policy'                              = "[Stage 1] Data Loss Prevention for SPO + OD [v1.2]";
+      'Policy'                              = "[Stage 1] Data Loss Prevention for SPO + OD [v1.3]";
 
       'BlockAccessScope'                    = "PerAnonymousUser";
       'BlockAccess'                         = $True;
       'NotifyUser'                          = "LastModifier";
       'NotifyPolicyTipCustomText'           = "File contains sensitive information and can not be shared anonymously";
+
+      'GenerateIncidentReport'              = $AlertAddress;
 
       'RemoveRMSTemplate'                   = $False;
       'ContentContainsSensitiveInformation' = $SensitiveInfo;
@@ -412,18 +420,18 @@ if ($Mode = "Enable") {
    # Non-Exchange ; High-Volume (3 or more occurrences) - Record and Generate Report of High-Volume Sharing
 
    $NonEXoDLruleParamHigh = @{
-      'Name'                                = "[Stage 1] DLP Non-EXO Rule - High Volume [v1.2]";
-      'Comment'                             = "[Stage 1] Data Loss Prevention All Platforms for Non-EXO Rule High Volume (3+ occurrences) [v1.2] Imported via PS";
+      'Name'                                = "[Stage 1] DLP Non-EXO Rule - High Volume [v1.3]";
+      'Comment'                             = "[Stage 1] Data Loss Prevention All Platforms for Non-EXO Rule High Volume (3+ occurrences) [v1.3] Imported via PS";
       'Disabled'                            = $False;
       'Priority'                            = 0;
-      'Policy'                              = "[Stage 1] Data Loss Prevention Non-EXO [v1.2]";
+      'Policy'                              = "[Stage 1] Data Loss Prevention Non-EXO [v1.3]";
 
       'AccessScope'                         = "NotInOrganization";
       'BlockAccessScope'                    = "PerUser";
       'BlockAccess'                         = $True;
       'RemoveRMSTemplate'                   = $False;
       'ReportSeverityLevel'                 = "High";
-      'GenerateIncidentReport'              = "SiteAdmin", $AlertAddress;
+      'GenerateIncidentReport'              = $AlertAddress;
       'IncidentReportContent'               = "Title, DocumentAuthor, DocumentLastModifier, Service, MatchedItem, RulesMatched, Detections, Severity, DetectionDetails, RetentionLabel, SensitivityLabel";
       'NotifyUser'                          = "SiteAdmin";
       'NotifyAllowOverride'                 = "FalsePositive", "WithJustification";
@@ -445,14 +453,14 @@ if ($Mode = "Enable") {
    New-DlpComplianceRule @NonEXoDLruleParamHigh
 
 
-   # Non-Exchange ; Low-Volume (1-2 occurrences) (No-Admin Report)
+   # Non-Exchange ; Low-Volume (1-2 occurrences)
 
    $NonEXoDLruleParamLow = @{
-      'Name'                                = "[Stage 1] DLP Non-EXO Rule - Low Volume [v1.2]";
-      'Comment'                             = "[Stage 1] Data Loss Prevention All Platforms for Non-EXO Rule Low Volume (1-2 occurrences) [v1.2] Imported via PS";
+      'Name'                                = "[Stage 1] DLP Non-EXO Rule - Low Volume [v1.3]";
+      'Comment'                             = "[Stage 1] Data Loss Prevention All Platforms for Non-EXO Rule Low Volume (1-2 occurrences) [v1.3] Imported via PS";
       'Disabled'                            = $False;
       'Priority'                            = 1;
-      'Policy'                              = "[Stage 1] Data Loss Prevention Non-EXO [v1.2]";
+      'Policy'                              = "[Stage 1] Data Loss Prevention Non-EXO [v1.3]";
 
       'AccessScope'                         = "NotInOrganization";
       'BlockAccessScope'                    = "PerUser";
@@ -462,6 +470,8 @@ if ($Mode = "Enable") {
       'NotifyUser'                          = "SiteAdmin";
       'NotifyAllowOverride'                 = "FalsePositive", "WithJustification";
       'NotifyPolicyTipCustomText'           = "File contains more than one instance of sensitive information and can not be shared outside of your organization without a justification. Please see option to override.";
+
+      'GenerateIncidentReport'              = $AlertAddress;
 
       'ContentContainsSensitiveInformation' = $SensitiveInfoLow;
       'StopPolicyProcessing'                = $False;
@@ -481,7 +491,7 @@ if ($Mode = "Enable") {
 
    Write-Host
    Write-Host
-   Write-Host -ForegroundColor green "[v1.2] Data Loss Prevention Policy and Rules for All Non-Exchange Platforms have been created."
+   Write-Host -ForegroundColor green "[v1.3] Data Loss Prevention Policy and Rules for All Non-Exchange Platforms have been created."
 
 ## End Of Script
 
